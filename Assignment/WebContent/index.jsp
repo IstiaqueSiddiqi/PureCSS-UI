@@ -154,6 +154,28 @@ labelpure-form label {
 </style>
 </head>
 <body class="body">
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '1556866657895372',
+      xfbml      : true,
+      version    : 'v2.4'
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
+
+
+<!-- ------------------------------------------------------------------------- -->
+
+
 	<div class="content pure-u-1">
 		<div class="pure-g-r">
 			<div class="content pure-g-r">
