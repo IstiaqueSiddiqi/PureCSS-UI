@@ -78,7 +78,7 @@
 						</div>
 					</div>
 				</div>
-				
+				<%-- <jsp:include page="navigation.jsp" /> --%>
 
 				<div class="pure-u-1 slideShow">
 					<div class="pure-g-r">
@@ -223,7 +223,7 @@
 								<label for="password">Your Password</label> <input id="password"
 									type="password" placeholder="Your Password">
 
-								<button type="submit" class="pure-button">Sign Up</button>
+								<button type="submit" class="pure-button btn">Sign Up</button>
 							</fieldset>
 						</form>
 					</div>
