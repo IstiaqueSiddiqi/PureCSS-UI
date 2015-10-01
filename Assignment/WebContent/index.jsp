@@ -78,7 +78,7 @@
 						</div>
 					</div>
 				</div>
-				<%-- <jsp:include page="navigation.jsp" /> --%>
+				
 
 				<div class="pure-u-1 slideShow">
 					<div class="pure-g-r">
