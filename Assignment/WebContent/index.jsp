@@ -29,32 +29,75 @@
 <link rel="stylesheet"
 	href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
 
+<!-------------------------------- Linkedin Login SDK ------------------------------------------->
+<script type="text/javascript" src="//platform.linkedin.com/in.js">
+    api_key:   75c20eo91xz6lm
+    onLoad:    onLinkedInLoad
+    authorize: true
+    lang:      en_US
+</script>
+
 <script type="text/javascript">
-	$("#submit").click(function() {
-		$.ajax({
-			url : form.attr('action'),
-			type : 'POST',
-			dataType : "json",
-			data : {
-				name : $('#name').val(),
-				email : $('#email').val(),
-				password : $('#password').val()
-			}
-		}).done(function(data) {
-			alert(JSON.stringify(data));
+    
+    // Setup an event listener to make an API call once auth is complete
+    function onLinkedInLoad() {
+        IN.Event.on(IN, "auth", getProfileData);
+    }
+
+    // Handle the successful return from the API call
+    function onSuccess(data) {
+        console.log(data);
+    }
+
+    // Handle an error response from the API call
+    function onError(error) {
+        console.log(error);
+    }
+
+    // Use the API call wrapper to request the member's basic profile data
+    function getProfileData() {
+        IN.API.Raw("/people/~").result(onSuccess).error(onError);
+    }
+    
+ 	// Retrieving a user profile when the user has authenticated
+    function onLinkedInAuth() {
+    	IN.API.Profile("me").result(displayProfiles);
+    }
+ 	
+    function ShowProfileData(profiles) {
+        var member = profiles.values[0];
+        //use information captured above
+        document.getElementById("linkedin-status").innerHTML = 
+            "<p id=\"" + member.id + "\">Hello " +  member.firstName + " " + member.lastName + "</p>";
+    }
+
+</script>
+<!------------------------------------------------------------------------------------------------>
+<script src="js/jquery-1.11.1.js" type="text/javascript"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#submit').click(function(event) {
+			var Name = $('#userName').val();
+			var Email = $('#userEmail').val();
+			var Password = $('#userPassword').val();
+			$.post('NewUser', {
+				userName : Name,
+				userEmail : Email,
+				userPassword : Password
+			}, function(responseText) {
+				//$('#setDivWithText').text(responseText);
+				alert(responseText);
+			});
 		});
 	});
 </script>
 </head>
 
 <body class="body">
-
 	<div class="content pure-u-1">
 		<div class="pure-g-r">
 			<div class="content pure-g-r">
-
-
-
+				<!-------------------------------- Navigation Menu Bar ------------------------------------------->
 				<div class="header pure-u-1">
 					<div
 						class="pure-menu pure-menu-open pure-menu-fixed pure-menu-horizontal"
@@ -78,8 +121,7 @@
 						</div>
 					</div>
 				</div>
-				<%-- <jsp:include page="navigation.jsp" /> --%>
-
+				<!-------------------------------- Slide show/Banner ------------------------------------------->
 				<div class="pure-u-1 slideShow">
 					<div class="pure-g-r">
 						<div class="pure-u-1-3 ">
@@ -206,7 +248,7 @@
 				</div>
 			</div>
 
-
+			<!-------------------------------- Contact Us & Sign Up Form ------------------------------------------->
 			<div class="content ">
 				<h2 class="content-head is-center">Dolore magna aliqua. Uis
 					aute irure.</h2>
@@ -223,7 +265,7 @@
 								<label for="password">Your Password</label> <input id="password"
 									type="password" placeholder="Your Password">
 
-								<button type="submit" class="pure-button btn">Sign Up</button>
+								<button type="button" class="pure-button btn">Sign Up</button>
 							</fieldset>
 						</form>
 					</div>
@@ -245,7 +287,7 @@
 			</div>
 
 		</div>
-
+		<!-------------------------------- Main/Top Footer ------------------------------------------->
 		<div class="content pure-u-1" id="footer">
 			<div class="pure-g-r">
 				<div class="pure-u-1-5">
@@ -310,16 +352,15 @@
 				</h3>
 			</div>
 		</div>
-
+		<!-------------------------------- Inner/Bottom Footer ------------------------------------------->
 		<div class="footer l-box">
 			Copyright &copy; <a href="istiaquehaque.wix.com/profile"
 				title="webdesigner">Istiaque Siddiqi</a>
-
 		</div>
 	</div>
 
 
-	<!------------------------- SignUp----------------------------- -->
+	<!-------------------------------- Sign Up ------------------------------------------->
 
 	<div id="signup" class="modal fade" role="dialog">
 		<div class="modal-dialog">
@@ -329,17 +370,15 @@
 				</div>
 
 				<div class="modal-body">
-					<form class="pure-form" action="newuser" id="newuser" method="post">
+					<form class="pure-form">
 						<fieldset class="pure-group">
 							<input type="text" class="pure-input-1-2" placeholder="Username"
-								id="username" name="username" required="required"> <input
-								type="email" class="pure-input-1-2" placeholder="Email"
-								id="email" name="email" required="required"> <input
-								type="password" class="pure-input-1-2" placeholder="Password"
-								id="password" name="password" required="required"> <input
-								type="text" name="mesg" id="result" value="" />
+								id="userName" required="required"> <input type="email"
+								class="pure-input-1-2" placeholder="Email" id="userEmail"
+								required="required"> <input type="password"
+								class="pure-input-1-2" placeholder="Password" id="userPassword"
+								required="required">
 						</fieldset>
-
 						<button type="submit"
 							class="pure-button pure-input-1 pure-button-primary" id="submit">Sign
 							Up</button>
@@ -347,136 +386,12 @@
 							style="text-align: center; font-size: 16px; margin-bottom: 18px;">Or
 							connect with</h5>
 						<div class="is-center">
-							<a href="#"><img src="images/fb_button.png"
-								style="width: 40%;" onclick="FB.login();"></a> <a href="#"><img
-								src="images/linkedin_button.png" style="width: 40%;"></a>
+<!-- 							<a href="#"><img src="images/fb_button.png" -->
+<!-- 								style="width: 40%;" onclick="FB.login();"></a> <a href="#"><img -->
+<!-- 								src="images/linkedin_button.png" style="width: 40%;" ></a> -->
+							<fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
+							<script type="in/Login"></script>
 						</div>
-
-
-						<script>
-							window.fbAsyncInit = function() {
-								FB.init({
-									appId : '1556866657895372',
-									xfbml : true,
-									version : 'v2.4'
-								});
-							};
-
-							(function(d, s, id) {
-								var js, fjs = d.getElementsByTagName(s)[0];
-								if (d.getElementById(id)) {
-									return;
-								}
-								js = d.createElement(s);
-								js.id = id;
-								js.src = "//connect.facebook.net/en_US/sdk.js";
-								fjs.parentNode.insertBefore(js, fjs);
-							}(document, 'script', 'facebook-jssdk'));
-						</script>
-
-
-						<script>
-							// This is called with the results from from FB.getLoginStatus().
-							function statusChangeCallback(response) {
-								console.log('statusChangeCallback');
-								console.log(response);
-								// The response object is returned with a status field that lets the
-								// app know the current login status of the person.
-								// Full docs on the response object can be found in the documentation
-								// for FB.getLoginStatus().
-								if (response.status === 'connected') {
-									// Logged into your app and Facebook.
-									testAPI();
-								} else if (response.status === 'not_authorized') {
-									// The person is logged into Facebook, but not your app.
-									document.getElementById('status').innerHTML = 'Please log '
-											+ 'into this app.';
-								} else {
-									// The person is not logged into Facebook, so we're not sure if
-									// they are logged into this app or not.
-									document.getElementById('status').innerHTML = 'Please log '
-											+ 'into Facebook.';
-								}
-							}
-
-							// This function is called when someone finishes with the Login
-							// Button.  See the onlogin handler attached to it in the sample
-							// code below.
-							function checkLoginState() {
-								FB.getLoginStatus(function(response) {
-									statusChangeCallback(response);
-								});
-							}
-
-							window.fbAsyncInit = function() {
-								FB.init({
-									appId : '1556866657895372',
-									cookie : true, // enable cookies to allow the server to access 
-									// the session
-									xfbml : true, // parse social plugins on this page
-									version : 'v2.2' // use version 2.2
-								});
-
-								// Now that we've initialized the JavaScript SDK, we call 
-								// FB.getLoginStatus().  This function gets the state of the
-								// person visiting this page and can return one of three states to
-								// the callback you provide.  They can be:
-								//
-								// 1. Logged into your app ('connected')
-								// 2. Logged into Facebook, but not your app ('not_authorized')
-								// 3. Not logged into Facebook and can't tell if they are logged into
-								//    your app or not.
-								//
-								// These three cases are handled in the callback function.
-
-								FB.getLoginStatus(function(response) {
-									statusChangeCallback(response);
-								});
-
-							};
-
-							// Load the SDK asynchronously
-							(function(d, s, id) {
-								var js, fjs = d.getElementsByTagName(s)[0];
-								if (d.getElementById(id))
-									return;
-								js = d.createElement(s);
-								js.id = id;
-								js.src = "//connect.facebook.net/en_US/sdk.js";
-								fjs.parentNode.insertBefore(js, fjs);
-							}(document, 'script', 'facebook-jssdk'));
-
-							// Here we run a very simple test of the Graph API after login is
-							// successful.  See statusChangeCallback() for when this call is made.
-							function testAPI() {
-								console
-										.log('Welcome!  Fetching your information.... ');
-								FB
-										.api(
-												'/me',
-												function(response) {
-													console
-															.log('Successful login for: '
-																	+ response.name);
-													document
-															.getElementById('status').innerHTML = 'Thanks for logging in, '
-															+ response.name
-															+ '!';
-												});
-							}
-						</script>
-
-						<!--
-  Below we include the Login Button social plugin. This button uses
-  the JavaScript SDK to present a graphical Login button that triggers
-  the FB.login() function when clicked.
--->
-
-						<!-- <fb:login-button scope="public_profile,email" onlogin="checkLoginState();"> -->
-						<!-- </fb:login-button> -->
-
-						<div id="status"></div>
-
 					</form>
 				</div>
 
@@ -487,8 +402,129 @@
 			</div>
 		</div>
 	</div>
+	<!-------------------------------- Facebook Login SDK ------------------------------------------->
+	<script>
+		window.fbAsyncInit = function() {
+			FB.init({
+				appId : '1556866657895372',
+				xfbml : true,
+				version : 'v2.4'
+			});
+		};
 
-	<!------------------------- SignIn----------------------------- -->
+		(function(d, s, id) {
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) {
+				return;
+			}
+			js = d.createElement(s);
+			js.id = id;
+			js.src = "//connect.facebook.net/en_US/sdk.js";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+	</script>
+
+
+	<script>
+		// This is called with the results from from FB.getLoginStatus().
+		function statusChangeCallback(response) {
+			console.log('statusChangeCallback');
+			console.log(response);
+			// The response object is returned with a status field that lets the
+			// app know the current login status of the person.
+			// Full docs on the response object can be found in the documentation
+			// for FB.getLoginStatus().
+			if (response.status === 'connected') {
+				// Logged into your app and Facebook.
+				testAPI();
+			} else if (response.status === 'not_authorized') {
+				// The person is logged into Facebook, but not your app.
+				document.getElementById('status').innerHTML = 'Please log '
+						+ 'into this app.';
+			} else {
+				// The person is not logged into Facebook, so we're not sure if
+				// they are logged into this app or not.
+				document.getElementById('status').innerHTML = 'Please log '
+						+ 'into Facebook.';
+			}
+		}
+
+		// This function is called when someone finishes with the Login
+		// Button.  See the onlogin handler attached to it in the sample
+		// code below.
+		function checkLoginState() {
+			FB.getLoginStatus(function(response) {
+				statusChangeCallback(response);
+			});
+		}
+
+		window.fbAsyncInit = function() {
+			FB.init({
+				appId : '1556866657895372',
+				cookie : true, // enable cookies to allow the server to access 
+				// the session
+				xfbml : true, // parse social plugins on this page
+				version : 'v2.2' // use version 2.2
+			});
+
+			// Now that we've initialized the JavaScript SDK, we call 
+			// FB.getLoginStatus().  This function gets the state of the
+			// person visiting this page and can return one of three states to
+			// the callback you provide.  They can be:
+			//
+			// 1. Logged into your app ('connected')
+			// 2. Logged into Facebook, but not your app ('not_authorized')
+			// 3. Not logged into Facebook and can't tell if they are logged into
+			//    your app or not.
+			//
+			// These three cases are handled in the callback function.
+
+			FB.getLoginStatus(function(response) {
+				statusChangeCallback(response);
+			});
+
+		};
+
+		// Load the SDK asynchronously
+		(function(d, s, id) {
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id))
+				return;
+			js = d.createElement(s);
+			js.id = id;
+			js.src = "//connect.facebook.net/en_US/sdk.js";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+
+		// Here we run a very simple test of the Graph API after login is
+		// successful.  See statusChangeCallback() for when this call is made.
+		function testAPI() {
+			console.log('Welcome!  Fetching your information.... ');
+			FB
+					.api(
+							'/me',
+							function(response) {
+								console.log('Successful login for: '
+										+ response.name);
+								document.getElementById('status').innerHTML = 'Thanks for logging in, '
+										+ response.name + '!';
+							});
+		}
+	</script>
+
+	<!--
+  Below we include the Login Button social plugin. This button uses
+  the JavaScript SDK to present a graphical Login button that triggers
+  the FB.login() function when clicked.
+-->
+
+	<!-- <fb:login-button scope="public_profile,email" onlogin="checkLoginState();"> -->
+	<!-- </fb:login-button> -->
+
+	<div id="status" style="float: left;"></div>
+	<div id="linkedin-status" style="float: right;"></div>
+
+	<!-------------------------------- Sign In ------------------------------------------->
 	<div id="signin" class="modal fade" role="dialog">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -508,8 +544,6 @@
 						<button type="submit"
 							class="pure-button pure-input-1-2 pure-button-primary">Sign
 							In</button>
-
-
 					</form>
 				</div>
 
@@ -533,5 +567,9 @@
 			}, 'a[href="#"]');
 		});
 	</script>
+
+	<!-- 	<div class="fb-like" data-share="true" data-width="450" -->
+	<!-- 		data-show-faces="true"></div> -->
 </body>
 </html>
+	
